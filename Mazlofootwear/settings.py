@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2o@rnjjgq48p4+zpd^3qxi8=uix@bb)!srpy^mid9r8ujzua8+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '13.239.1.122', '127.0.0.1']
 
