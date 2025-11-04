@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '127.0.0.1']
 INTERNAL_IPS = [
     '127.0.0.1',
     'localhost',
+    '13.239.1.122'
     '0.0.0.0',         # sometimes needed
     '172.17.0.1',      # Docker host IP (example)
 ]
@@ -171,14 +172,24 @@ JAZZMIN_SETTINGS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD':'Mazlofootwear123',
-        'HOST': 'mazlofootwear.cdca6kiwypeq.ap-southeast-2.rds.amazonaws.com',  # If using a remote database, set the correct host
+        'NAME': 'mazlo',
+        'USER': 'mazlo',
+        'PASSWORD':'9947',
+        'HOST': '127.0.0.1',  # If using a remote database, set the correct host
         'PORT': '5432',       # Default PostgreSQL port
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD':'Mazlofootwear123',
+#         'HOST': 'mazlofootwear.cdca6kiwypeq.ap-southeast-2.rds.amazonaws.com',  # If using a remote database, set the correct host
+#         'PORT': '5432',       # Default PostgreSQL port
+#     }
+# }
 
 
 # Password validation
