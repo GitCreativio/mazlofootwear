@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Base Template Page Code{% endblock title %}</title>
+    <meta name="description" content="{% block description %}This is the default description for the page.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}keyword1, keyword2, keyword3, keyword4{% endblock %}">
+    <link rel="icon" type="image/png" href="{% static '/images/mazlofavicon.png' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;            
+        }
+
+        a{
+            text-decoration: none;
+        }
+
+        :root {
+            --primary-color: #3a5a40;
+            --secondary-color: #588157;
+            --accent-color: #a3b18a;
+            --text-color: #344e41;
+            --light-bg: #f8f9fa;
+            --light-text: #6c757d;
+            --dark-bg: #212529;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+    
+        /* Header Styles */
+        .site-header {
+            position: relative;
+            z-index: 1030;
+            position: sticky;
+            top: 0;
+        }
+    
+        .navbar {
+            padding: 0;
+            background-color: white;                                    
+        }
+    
+        .navbar-brand {
+            padding: 10px 0;
+        }
+    
+        .navbar-logo {
+            height: 8rem;
+            width: 8rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+    
+        .navbar-logo:hover {
+            transform: scale(1.05);
+        }
+    
+        .navbar-nav {
+            padding: 0;
+        }
+    
+        .nav-item {
+            position: relative;
+            margin: 0 5px;
+        }
+    
+        .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 30px 15px !important;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: var(--transition);
+        }
+    
+        .nav-link:hover, .nav-link:focus {
+            color: var(--primary-color) !important;
+        }
+    
+        /* Mega Menu */
+        .has-megamenu {
+            position: static !important;
+        }
+    
+        .megamenu {
+            width: 100%;
+            border: none;
+            border-radius: 0;
+            margin-top: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px 0;
+            border-top: 3px solid var(--primary-color);
+        }
+    
+        .megamenu-title {
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+    
+        .megamenu-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+    
+        .col-megamenu ul li {
+            margin-bottom: 10px;
+        }
+    
+        .col-megamenu ul li a {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-decoration: none;
+            display: block;
+        }
+    
+        .col-megamenu ul li a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+    
+        /* Promo Box */
+        .promo-box {
+            background-color: var(--accent-color);
+            background-image: url("{% static 'images/promo-bg.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            height: 100%;
+            min-height: 200px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+    
+        .promo-content {
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+    
+        .promo-content h5 {
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+    
+        .promo-content p {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .promo-content.kids {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+    
+        .promo-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(58, 90, 64, 0.8), rgba(88, 129, 87, 0.6));
+        }
+    
+        .btn-shop-now {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+    
+        .promo-content.kids .btn-shop-now {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    
+        .btn-shop-now:hover {
+            background-color: var(--text-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+    
+        /* Navbar Actions */
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+        }
+    
+        .action-item {
+            position: relative;
+            margin-left: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+    
+        .action-item:hover {
+            color: var(--primary-color);
+        }
+    
+        .cart-count, .mobile-cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        /* Search Panel */
+        .search-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            padding: 20px 0;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1020;
+        }
+    
+        .search-panel.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+    
+        .search-form {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 1px solid #eee;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+    
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+        }
+    
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+    
+        .search-button:hover {
+            background-color: var(--text-color);
+        }
+    
+        .search-close {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+    
+        .search-close:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) rotate(90deg);
+        }
+    
+        /* User Dropdown */
+        .user-dropdown {
+            min-width: 200px;
+            padding: 0;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+    
+        .dropdown-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+        }
+    
+        .dropdown-item {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+    
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            color: var(--primary-color);
+        }
+    
+        .dropdown-divider {
+            margin: 0;
+        }
+    
+        /* Mobile Bottom Nav */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1020;
+            padding: 5px 0;
+        }
+    
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-text);
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: var(--transition);
+            position: relative;
+        }
+    
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+    
+        .mobile-nav-item:hover, .mobile-nav-item:focus {
+            color: var(--primary-color);
+        }
+    
+        .mobile-nav-item.active {
+            color: var(--primary-color);
+        }
+    
+        .mobile-cart-count {
+            position: absolute;
+            top: -2px;
+            right: 25%;
+        }
+    
+        /* Navbar Toggler */
+        .navbar-toggler {
+            border: none;
+            padding: 0;
+            outline: none;
+        }
+    
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .nav-link {
+                padding: 12px 15px !important;
+            }
+    
+            .navbar-collapse {
+                background-color: white;
+                padding: 20px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+    
+            .navbar-nav {
+                margin-bottom: 20px;
+            }
+    
+            .has-megamenu {
+                position: relative !important;
+            }
+    
+            .megamenu {
+                padding: 15px;
+                box-shadow: none;
+                border-top: none;
+            }
+    
+            .mobile-bottom-nav {
+                display: flex;
+            }
+    
+            body {
+                padding-bottom: 60px;
+            }
+    
+            .navbar-actions {
+                display: none;
+            }
+    
+            .navbar-logo {
+                height:8rem;
+                weight:8rem;
+            }
+    
+            .col-megamenu {
+                margin-bottom: 20px;
+            }
+    
+            .promo-box {
+                display: none;
+            }
+    
+            .navbar-toggler-icon {
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2852, 58, 64, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            }
+        }
+    
+        @media (max-width: 767.98px) {
+            .search-panel .container {
+                padding: 0 30px;
+            }
+        }
+    
+        @media (min-width: 992px) {
+            .dropdown:hover > .dropdown-menu {                
+                margin-top: 0;
+            }
+        }
+    
+        /* Add animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .dropdown-menu.show {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            background: #2A2A2A;
+            color: #fff;
+            padding: 4rem 0 2rem;
+            margin-top: auto;
+        }
+
+        .footer-heading {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            color: #c5c5c5;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link a{
+            color: #fff;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3A3A3A;
+            color: #c5c5c5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #4A4A4A;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 991px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-bottom-nav {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .main-navbar .nav-logo {
+                max-width: 120px;
+            }
+
+            body {
+                padding-bottom: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Desktop Navbar -->
+<header class="site-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="navbar-brand">
+                <img src="{% static 'images/log.png' %}" alt="Mazlo Logo" class="navbar-logo">
+            </a>
+
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Main Navigation -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- Category Links -->
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="{% url 'home' %}">HOME</a>
+                    </li>
+                    <li class="nav-item dropdown has-megamenu">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">WOMEN</a>
+                        <div class="dropdown-menu megamenu" role="menu">
+                            <div class="container">
+                                <div class="row g-4">
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Shop by Category</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Sneakers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Boots</a></li>
+                                                <li><a href="{% url 'shopping' %}">Heels</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sandals</a></li>
+                                                <li><a href="{% url 'shopping' %}">Flats</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Collections</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">New Arrivals</a></li>
+                                                <li><a href="{% url 'shopping' %}">Bestsellers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Comfort Series</a></li>
+                                                <li><a href="{% url 'shopping' %}">Athletic</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sale</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Featured</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Premium Collection</a></li>
+                                                <li><a href="{% url 'shopping' %}">Limited Edition</a></li>
+                                                <li><a href="{% url 'shopping' %}">Eco-Friendly</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="promo-box">
+                                            <div class="promo-content">
+                                                <h5>Summer Collection</h5>
+                                                <p>Up to 40% Off</p>
+                                                <a href="{% url 'shopping' %}" class="btn-shop-now">Shop Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown has-megamenu">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">MEN</a>
+                        <div class="dropdown-menu megamenu" role="menu">
+                            <div class="container">
+                                <div class="row g-4">
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Shop by Category</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Sneakers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Boots</a></li>
+                                                <li><a href="{% url 'shopping' %}">Loafers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Dress Shoes</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sandals</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Collections</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">New Arrivals</a></li>
+                                                <li><a href="{% url 'shopping' %}">Bestsellers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sport</a></li>
+                                                <li><a href="{% url 'shopping' %}">Casual</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sale</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Featured</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Premium Collection</a></li>
+                                                <li><a href="{% url 'shopping' %}">Limited Edition</a></li>
+                                                <li><a href="{% url 'shopping' %}">Business</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="promo-box">
+                                            <div class="promo-content">
+                                                <h5>New Collection</h5>
+                                                <p>Starting at $79.99</p>
+                                                <a href="{% url 'shopping' %}" class="btn-shop-now">Shop Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown has-megamenu">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">KIDS</a>
+                        <div class="dropdown-menu megamenu" role="menu">
+                            <div class="container">
+                                <div class="row g-4">
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Shop by Age</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Toddlers (1-3)</a></li>
+                                                <li><a href="{% url 'shopping' %}">Little Kids (4-7)</a></li>
+                                                <li><a href="{% url 'shopping' %}">Big Kids (8-12)</a></li>
+                                                <li><a href="{% url 'shopping' %}">Teens (13+)</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Shop by Category</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">Sneakers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Boots</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sandals</a></li>
+                                                <li><a href="{% url 'shopping' %}">School Shoes</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="col-megamenu">
+                                            <h6 class="megamenu-title">Featured</h6>
+                                            <ul class="list-unstyled">
+                                                <li><a href="{% url 'shopping' %}">New Arrivals</a></li>
+                                                <li><a href="{% url 'shopping' %}">Bestsellers</a></li>
+                                                <li><a href="{% url 'shopping' %}">Sale</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="promo-box">
+                                            <div class="promo-content kids">
+                                                <h5>Back to School</h5>
+                                                <p>Special Offers</p>
+                                                <a href="{% url 'shopping' %}" class="btn-shop-now">Shop Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">CONTACT</a>
+                    </li>
+                </ul>
+
+                <!-- Right Side Icons -->
+                <div class="navbar-actions">
+                    <div class="action-item search-toggle">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="{% url 'cart' %}" class="action-item cart-icon">
+                        <i class="fas fa-shopping-bag"></i>                        
+                    </a>
+                    <div class="action-item user-profile dropdown">
+                        <i class="far fa-user" data-bs-toggle="dropdown"></i>
+                        <div class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <h6 class="dropdown-header">My Account</h6>
+                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'my_orders' %}">My Orders</a>                            
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Panel -->
+    <div class="search-panel">
+        <div class="container">
+            <form action="{% url 'shopping' %}" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Search for products..." class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+            <button class="search-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Bottom Nav -->
+<div class="mobile-bottom-nav d-lg-none">
+    <a href="{% url 'home' %}" class="mobile-nav-item">
+        <i class="fas fa-home"></i>        
+    </a>
+    <a href="#" class="mobile-nav-item search-toggle-mobile">
+        <i class="fas fa-search"></i>        
+    </a>
+    <a href="{% url 'shopping' %}" class="mobile-nav-item">
+        <i class="fas fa-th-large"></i>        
+    </a>
+    <a href="{% url 'cart' %}" class="mobile-nav-item">
+        <i class="fas fa-shopping-bag"></i>                
+    </a>
+    <a href="{% url 'profile' %}" class="mobile-nav-item">
+        <i class="far fa-user"></i>        
+    </a>
+</div>
+
+
+<!-- Main Content -->
+<main class="main-content">
+    {% block content %}
+    <!-- Page content -->
+    {% endblock content %}
+</main>
+
+<!-- Footer -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <h5 class="footer-heading">About Us</h5>
+                <p class="text">Premium footwear for modern lifestyles. Crafted with care, designed for comfort.</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="footer-heading">Customer Service</h5>
+                <a href="{% url "contact" %}" class="footer-link">Contact Us</a>
+                <a href="{% url "privacy" %}" class="footer-link">Shipping Policy</a>
+                <a href="{% url "privacy" %}" class="footer-link">Returns & Exchanges</a>
+                <a href="{% url "privacy" %}" class="footer-link">FAQs</a>
+            </div>
+            <div class="col-md-3">
+                <h5 class="footer-heading">Company</h5>
+                <a href="{% url "about" %}" class="footer-link">About</a>
+                <a href="{% url "careers" %}" class="footer-link">Careers</a>
+                <a href="{% url "blog" %}" class="footer-link">Blog</a>
+                <a href="{% url "contact" %}" class="footer-link">Store Locator</a>
+            </div>
+            <div class="col-md-3">
+                <h5 class="footer-heading">Follow Us</h5>
+                <div class="d-flex mt-3">
+                    <a href="https://www.facebook.com/people/Mazlo/61572164513081/" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/mazlo_footwear?igsh=OXBxOGlqNWR3dGg=" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com/@mazlofootwear?si=z5-J6JIWVEYmjltc" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/company/mazlo-footwear/" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5 pt-3 border-top">
+            <p class="text mb-0">&copy; 2025 Mazlo Footwear. All rights reserved. Powerd By <a href="https://www.creativio.in" class="text-secondary">Creativio Media & Advertising LLP</a></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search toggle functionality
+        const searchToggle = document.querySelector('.search-toggle');
+        const searchToggleMobile = document.querySelector('.search-toggle-mobile');
+        const searchPanel = document.querySelector('.search-panel');
+        const searchClose = document.querySelector('.search-close');
+        
+        if (searchToggle) {
+            searchToggle.addEventListener('click', function() {
+                searchPanel.classList.add('active');
+                document.querySelector('.search-input').focus();
+            });
+        }
+        
+        if (searchToggleMobile) {
+            searchToggleMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchPanel.classList.add('active');
+                document.querySelector('.search-input').focus();
+            });
+        }
+        
+        if (searchClose) {
+            searchClose.addEventListener('click', function() {
+                searchPanel.classList.remove('active');
+            });
+        }
+        
+        // Mobile nav active state
+        const currentLocation = window.location.pathname;
+        const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+        mobileNavItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href === currentLocation) {
+                item.classList.add('active');
+            }
+        });
+
+        // Fix for megamenu on mobile
+        if (window.innerWidth < 992) {
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.setAttribute('data-bs-toggle', 'dropdown');
+            });
+        }
+    });
+</script>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

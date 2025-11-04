@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mazlo Footwear | Return Request for Order #{{ order.id }}{% endblock title %}
+{% block metakeyword %}return, cancel, order, footwear, e-commerce{% endblock metakeyword %}
+{% block metadescription %}Submit a return request for your Mazlo Footwear order #{{ order.id }}{% endblock metadescription %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <main class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-up">
+            <!-- Header -->
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900">Return Request for Order #{{ order.id }}</h2>
+                <p class="mt-1 text-sm text-gray-600">Please provide details about your return request</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="px-6 py-4 bg-gray-50">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900">Order #{{ order.id }}</p>
+                        <p class="text-sm text-gray-600">Placed on {{ order.order_date|date:"F j, Y" }}</p>
+                    </div>
+                    <p class="mt-2 sm:mt-0 text-sm font-semibold text-gray-900">Total: ₹{{ order.total_amount }}</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="px-6 py-6">
+                <form method="post" id="returnForm" data-aos="fade-up" data-aos-delay="100">
+                    {% csrf_token %}
+                    <div class="mb-6">
+                        <label for="{{ form.reason.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Reason for Return</label>
+                        <div class="relative">
+                            {{ form.reason }}
+                            {% if form.reason.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.reason.errors }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Additional Details</label>
+                        <div class="relative">
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.description.errors }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <button type="submit" class="w-full sm:w-auto bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-all font-semibold">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Return Request
+                        </button>
+                        <a href="{% url 'my_orders' %}" class="w-full sm:w-auto text-center bg-red-100 text-red-600 py-2 px-4 rounded-lg hover:bg-red-200 transition-all font-semibold">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Orders
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Form submission confirmation
+        document.getElementById('returnForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Confirm Return Request',
+                text: 'Are you sure you want to submit this return request?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2A2A2A',
+                cancelButtonColor: '#e53e3e',
+                confirmButtonText: 'Yes, Submit',
+                cancelButtonText: 'No, Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load cache %}
+{% load static %}
+{% block title %}Mazlo Footwear | Blog{% endblock title %}
+{% block metakeyword %}footwear trends, shoe care tips, fashion blog, footwear guides{% endblock metakeyword %}
+{% block metadescription %}Explore the latest in footwear fashion with Mazlo's blog. Discover style tips, care guides, and industry trends from shoe experts.{% endblock metadescription %}
+
+{% block content %}
+<body class="font-sans">
+    <!-- Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="postModal">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-3xl mx-4 relative">
+            <button class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl close-modal">×</button>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-lg mb-4">
+                <h2 id="modalTitle" class="text-2xl font-bold text-gray-900 mb-2"></h2>
+                <div class="flex items-center gap-4 mb-4">
+                    <span id="modalCategory" class="text-sm font-semibold text-red-600 uppercase"></span>
+                    <span id="modalDate" class="text-sm text-gray-600"></span>
+                </div>
+                <div id="modalContent" class="text-gray-700 leading-relaxed"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- Header Section -->
+        <section class="relative bg-gradient-to-b from-gray-900 to-gray-800 text-white py-32">
+            <div class="container mx-auto px-4 text-center relative z-10" data-aos="fade-up">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Step Into Style</h1>
+                <p class="text-xl md:text-2xl max-w-2xl mx-auto">Your guide to footwear fashion, care tips, and industry trends.</p>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-4 py-16">
+            <!-- Featured Post -->
+            {% if featured_post %}
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16" data-aos="fade-up" data-aos-delay="100">
+                <img src="{{ featured_post.featured_image.url }}" alt="{{ featured_post.title }}" class="w-full h-96 object-cover rounded-2xl shadow-lg">
+                <div class="flex flex-col justify-center">
+                    <span class="text-sm font-semibold text-red-600 uppercase mb-2">{{ featured_post.category.name }}</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ featured_post.title }}</h2>
+                    <p class="text-gray-600 mb-4">{{ featured_post.content|truncatewords:30 }}</p>
+                    <button class="read-more-btn bg-gray-900 text-white py-2 px-4 rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center" 
+                            data-title="{{ featured_post.title }}"
+                            data-category="{{ featured_post.category.name }}"
+                            data-date="{{ featured_post.publish_date|date:'F j, Y' }}"
+                            data-image="{{ featured_post.featured_image.url }}"
+                            data-content="{{ featured_post.content|safe }}">
+                        <span class="btn-text">Read More</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Blog Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                {% for post in posts %}
+                <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-aos="fade-up" data-aos-delay="{% cycle '100' '200' '300' %}">
+                    <img src="{{ post.featured_image.url }}" class="w-full h-48 object-cover" alt="{{ post.title }}">
+                    <div class="p-6">
+                        <span class="text-sm font-semibold text-red-600 uppercase">{{ post.category.name }}</span>
+                        <p class="text-sm text-gray-600 mt-1">{{ post.author }} | {{ post.publish_date|date:"F j, Y" }}</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mt-2 mb-3">{{ post.title }}</h3>
+                        <p class="text-gray-600 mb-4">{{ post.content|truncatewords:20 }}</p>
+                        <button class="read-more-btn bg-gray-900 text-white py-2 px-4 rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center" 
+                                data-title="{{ post.title }}"
+                                data-category="{{ post.category.name }}"
+                                data-date="{{ post.publish_date|date:'F j, Y' }}"
+                                data-image="{{ post.featured_image.url }}"
+                                data-content="{{ post.content|safe }}">
+                            <span class="btn-text">Read More</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Newsletter Section -->
+            <section class="bg-gray-900 text-white py-12 px-8 rounded-2xl text-center" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="text-3xl font-bold mb-4">Walk With Us</h2>
+                <p class="text-lg mb-6">Subscribe to our newsletter for exclusive content and early access to new collections.</p>
+                <form class="newsletter-form flex justify-center gap-4 flex-col sm:flex-row" method="POST">
+                    {% csrf_token %}
+                    {{ form.email }}
+                    <button type="submit" class="bg-white text-gray-900 py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300">Subscribe</button>
+                </form>                
+            </section>
+        </div>
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Modal handling
+        const modal = document.getElementById('postModal');
+        const openButtons = document.querySelectorAll('.read-more-btn');
+        const closeButton = document.querySelector('.close-modal');
+
+        openButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Get data from button attributes
+                const title = button.getAttribute('data-title');
+                const category = button.getAttribute('data-category');
+                const date = button.getAttribute('data-date');
+                const image = button.getAttribute('data-image');
+                const content = button.getAttribute('data-content');
+
+                // Update modal content
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalCategory').textContent = category;
+                document.getElementById('modalDate').textContent = date;
+                document.getElementById('modalImage').src = image;
+                document.getElementById('modalContent').innerHTML = content;
+
+                // Show modal
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

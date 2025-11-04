@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mazlo Footwear | Orders{% endblock title %}
+{% block metakeyword %}orders, footwear, e-commerce, shopping{% endblock metakeyword %}
+{% block metadescription %}View and track your Mazlo Footwear orders{% endblock metadescription %}
+
+{% block content %}
+<body class="bg-gray-100">
+    <main class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8" data-aos="fade-up">My Orders</h1>
+
+        {% if orders %}
+        <div class="space-y-6">
+            {% for order in orders %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="{% cycle '100' '200' '300' %}">
+                <div class="p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900">Order #{{ order.id }}</h2>
+                            <p class="text-sm text-gray-500">Placed on {{ order.order_date|date:"F d, Y" }}</p>
+                        </div>
+                        <div class="mt-4 sm:mt-0">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                {% if order.order_status == 'Processing' %}bg-yellow-100 text-yellow-800
+                                {% elif order.order_status == 'Shipped' %}bg-blue-100 text-blue-800
+                                {% elif order.order_status == 'Delivered' %}bg-green-100 text-green-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ order.order_status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Order Details -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Order Details</h3>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p><span class="font-medium">Total Amount:</span> ₹{{ order.total_amount }}</p>
+                                <p><span class="font-medium">Payment Method:</span> {{ order.payment_method|title }}</p>
+                                <p><span class="font-medium">Payment Status:</span> {{ order.payment_status|title }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Details -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Shipping Details</h3>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p>{{ order.shipping_address }}</p>
+                                <p>{{ order.city }}, {{ order.state }} {{ order.zip_code }}</p>
+                                <p><span class="font-medium">Phone:</span> {{ order.phone_number }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-6 flex flex-wrap gap-4">
+                        <a href="{% url 'order_detail' order.id %}" 
+                           class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-all">
+                            <i class="fas fa-eye mr-2"></i> View Details
+                        </a>
+                        {% if order.order_status == 'Processing' %}
+                        <a href="{% url 'cancel_order' pk=order.id %}" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-all">
+                            <i class="fas fa-times mr-2"></i> Cancel Order
+                        </a>
+                        {% elif order.order_status == 'Delivered' %}
+                        <a href="{% url 'initiate_return' pk=order.id %}" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-all">
+                            <i class="fas fa-undo mr-2"></i> Return Order
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16" data-aos="fade-up">
+            <i class="fas fa-box-open text-5xl text-gray-400 mb-4"></i>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">No Orders Found</h2>
+            <p class="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+            <a href="{% url 'shopping' %}" 
+               class="inline-flex items-center px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-700 transition-all">
+                Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

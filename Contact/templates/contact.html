@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mazlo Footwear | Contact{% endblock title %}
+{% block metakeyword %}contact mazlo footwear, customer support, shoe inquiries, footwear assistance{% endblock metakeyword %}
+{% block metadescription %}Get in touch with Mazlo Footwear - Premium footwear customer support. Reach us via phone, email, or visit our headquarters. We're here to help with all your footwear needs.{% endblock metadescription %}
+
+{% block content %}
+<body class="font-sans">
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-b from-gray-900 to-gray-800 text-white py-32">
+            <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{% static 'images/back.jpg' %}');"></div>
+            <div class="container mx-auto px-4 text-center relative z-10" data-aos="fade-up">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Let's Connect</h1>
+                <p class="text-xl md:text-2xl max-w-2xl mx-auto">Have a question or need assistance? We're here to help with all your footwear needs.</p>
+            </div>
+        </section>
+
+        <!-- Contact Card Section -->
+        <section class="container mx-auto px-4 -mt-16" data-aos="fade-up" data-aos-delay="100">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl mx-auto">
+                <!-- Contact Information -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                        <a href="https://maps.app.goo.gl/rsm8MCJvene1RzRTA" target="_blank">
+                            <i class="fas fa-map-marker-alt text-4xl text-gray-900 mb-4"></i>
+                        </a>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Visit Us</h3>
+                        <p class="text-gray-600">1/191A, Pallimethal, Kodampuzha, Farook College P O<br>Kozhikode-673632<br>Kerala, India</p>                        
+                    </div>
+                    <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-phone text-4xl text-gray-900 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Call Us</h3>
+                        <p class="text-gray-600">+91 7356342379 , +91 8089000786<br>Mon-Fri: 9am - 6pm IST<br>Sat: 10am - 4pm IST</p>
+                    </div>
+                    <div class="text-center" data-aos="fade-up" data-aos-delay="400">
+                        <i class="fas fa-envelope text-4xl text-gray-900 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Email Us</h3>
+                        <p class="text-gray-600">mazlofootwear@gmail.com<br>Quick response guaranteed</p>
+                    </div>
+                </div>
+
+                <!-- Contact Form and Social Media -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Contact Form -->
+                    <div data-aos="fade-right">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+                        <form class="contact-form" method="post">
+                            {% csrf_token %}                           
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    {{ form.name }}
+                                    {{ form.name.errors }}
+                                </div>
+                                <div>
+                                    {{ form.email }}
+                                    {{ form.email.errors }}
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                {{ form.phone }}
+                                {{ form.phone.errors }}
+                            </div>
+                            <div class="mb-4">
+                                {{ form.message }}
+                                {{ form.message.errors }}
+                            </div>
+                            <button type="submit" class="bg-gray-900 text-white py-3 px-6 rounded-full hover:bg-gray-700 transition duration-300">
+                                Send Message <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div data-aos="fade-left">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Connect With Us</h2>
+                        <div class="space-y-4">
+                            <a href="https://www.instagram.com/mazlo_footwear?igsh=OXBxOGlqNWR3dGg=" class="block bg-gray-50 text-gray-900 py-3 px-6 rounded-lg hover:bg-gray-200 transition duration-300">
+                                <i class="fab fa-instagram mr-2"></i> Instagram
+                            </a>
+                            <a href="https://www.facebook.com/share/1DLREZFigA/" class="block bg-gray-50 text-gray-900 py-3 px-6 rounded-lg hover:bg-gray-200 transition duration-300">
+                                <i class="fab fa-facebook mr-2"></i> Facebook
+                            </a>
+                            <a href="https://youtube.com/@mazlofootwear?si=z5-J6JIWVEYmjlt" class="block bg-gray-50 text-gray-900 py-3 px-6 rounded-lg hover:bg-gray-200 transition duration-300">
+                                <i class="fab fa-youtube mr-2"></i> YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="container mx-auto px-4 py-20">
+            <div class="rounded-2xl overflow-hidden shadow-lg" data-aos="fade-up">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3913.421659690743!2d75.8132258748894!3d11.230360288947345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba65bd1a8574c73%3A0x58ae26f030c307f4!2smazlofootwear!5e0!3m2!1sen!2sin!4v1742372337473!5m2!1sen!2sin" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

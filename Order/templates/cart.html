@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mazlo Footwear | Cart{% endblock title %}
+{% block metakeyword %}cart, shopping, footwear, e-commerce{% endblock metakeyword %}
+{% block metadescription %}View and manage your shopping cart at Mazlo Footwear. Proceed to checkout with ease.{% endblock metadescription %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    
+    <!-- Checkout Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="checkoutModal">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-4xl mx-4 relative">
+            <button class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl" id="closeCheckoutModal">×</button>
+            <h5 class="text-2xl font-bold text-gray-900 mb-6">Confirm Order</h5>
+            <form method="post" action="{% url 'process_checkout' %}">
+                {% csrf_token %}
+                <input type="hidden" name="selected_items" id="selectedItems">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Shipping Details -->
+                    <div>
+                        <h6 class="text-lg font-semibold text-gray-900 mb-4">Shipping Details</h6>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Shipping Address</label>
+                            <textarea name="shipping_address" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                            <input type="text" name="city" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                            <input type="text" name="state" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                            <input type="text" name="zip_code" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" name="phone_number" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="radio" name="payment_method" id="paymentCod" value="cod" class="h-4 w-4 text-gray-900 focus:ring-gray-900" checked>
+                                    <label for="paymentCod" class="ml-2 text-sm text-gray-700">Cash on Delivery</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" name="payment_method" id="paymentUpi" value="upi" class="h-4 w-4 text-gray-900 focus:ring-gray-900" disabled>
+                                    <label for="paymentUpi" class="ml-2 text-sm text-gray-400">UPI (Coming Soon)</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" name="payment_method" id="paymentCard" value="card" class="h-4 w-4 text-gray-900 focus:ring-gray-900" disabled>
+                                    <label for="paymentCard" class="ml-2 text-sm text-gray-400">Card (Coming Soon)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Order Summary -->
+                    <div>
+                        <h6 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h6>
+                        <div class="bg-gray-100 p-4 rounded-lg" id="orderSummary"></div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-4 mt-6">
+                    <button type="button" class="bg-gray-300 text-gray-900 py-2 px-4 rounded-lg hover:bg-gray-400 transition-all" id="cancelCheckout">Close</button>
+                    <button type="submit" class="bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-all">Confirm Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="main-content container mx-auto py-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8" data-aos="fade-up">Your Shopping Cart</h1>
+
+        {% if cart_items %}
+        <form id="checkoutForm" method="post" action="{% url 'process_checkout' %}">
+            {% csrf_token %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8" data-aos="fade-up">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4 text-left">
+                                <input type="checkbox" id="selectAll" class="h-4 w-4 text-gray-900 focus:ring-gray-900">
+                            </th>
+                            <th class="p-4 text-left text-sm font-semibold text-gray-700">Product</th>
+                            <th class="p-4 text-left text-sm font-semibold text-gray-700">Price</th>
+                            <th class="p-4 text-left text-sm font-semibold text-gray-700">Quantity</th>
+                            <th class="p-4 text-left text-sm font-semibold text-gray-700">Total</th>
+                            <th class="p-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all">
+                            <td class="p-4">
+                                <input type="checkbox" name="selected_items" 
+                                       value="{{ item.id }}"
+                                       class="h-4 w-4 text-gray-900 focus:ring-gray-900 item-checkbox"
+                                       data-price="{{ item.variant.price }}"
+                                       data-quantity="{{ item.quantity }}"
+                                       data-name="{{ item.variant.product.name }}">
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-4">
+                                    {% with first_image=item.variant.product.images.first %}
+                                    {% if first_image %}
+                                    <img src="{{ first_image.image.url }}" 
+                                         alt="{{ item.variant.product.name }}"
+                                         class="w-20 h-20 object-cover rounded-lg">
+                                    {% else %}
+                                    <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-image text-gray-400"></i>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    <div>
+                                        <h5 class="text-lg font-semibold text-gray-900">{{ item.variant.product.name }}</h5>
+                                        <p class="text-sm text-gray-600">Color: {{ item.variant.color }}</p>
+                                        <p class="text-sm text-gray-600">Size: {{ item.variant.size }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-900">₹{{ item.variant.price }}</td>
+                            <td class="p-4">
+                                <form method="post" action="{% url 'update_cart' item.id %}">
+                                    {% csrf_token %}
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" 
+                                               name="quantity" 
+                                               class="w-16 border border-gray-300 rounded-lg p-1 text-center focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                               value="{{ item.quantity }}"
+                                               min="1"
+                                               max="{{ item.variant.stock }}"
+                                               onchange="this.form.submit()">
+                                    </div>
+                                </form>
+                            </td>
+                            <td class="p-4 text-gray-900">₹{{ item.total_price }}</td>
+                            <td class="p-4">
+                                <a href="{% url 'remove_from_cart' item.id %}" 
+                                   class="text-red-500 hover:text-red-700 transition-all">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cart-summary bg-gray-100 p-6 rounded-2xl shadow-lg flex justify-between items-center" data-aos="fade-up" data-aos-delay="100">
+                <h4 class="text-xl font-semibold text-gray-900">Selected Total: ₹<span id="selectedTotal">0</span></h4>
+                <button type="button" 
+                        class="bg-gray-900 text-white py-3 px-6 rounded-lg hover:bg-gray-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        id="checkoutButton"
+                        disabled>
+                    Proceed to Checkout
+                </button>
+            </div>
+        </form>
+        {% else %}
+        <div class="text-center py-16" data-aos="fade-up">
+            <i class="fas fa-shopping-cart text-5xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h3>
+            <a href="{% url 'shopping' %}" class="bg-gray-900 text-white py-3 px-6 rounded-lg hover:bg-gray-700 transition-all">
+                Continue Shopping
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            const checkoutBtn = document.getElementById('checkoutButton');
+            const selectedTotal = document.getElementById('selectedTotal');
+            const checkoutModal = document.getElementById('checkoutModal');
+            const closeCheckoutModal = document.getElementById('closeCheckoutModal');
+            const cancelCheckout = document.getElementById('cancelCheckout');
+
+            // Select All functionality
+            selectAll.addEventListener('change', () => {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAll.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
+            });
+
+            // Individual checkbox handling
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    if (!checkbox.checked) selectAll.checked = false;
+                    updateSelection();
+                });
+            });
+
+            // Update total and checkout button state
+            function updateSelection() {
+                const selected = Array.from(checkboxes).filter(cb => cb.checked);
+                const total = selected.reduce((sum, item) => {
+                    return sum + (parseFloat(item.dataset.price) * parseInt(item.dataset.quantity));
+                }, 0);
+                
+                selectedTotal.textContent = total.toFixed(2);
+                checkoutBtn.disabled = selected.length === 0;
+            }
+
+            // Modal handling
+            checkoutBtn.addEventListener('click', () => {
+                const selectedIds = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(item => item.value);
+                document.getElementById('selectedItems').value = selectedIds.join(',');
+                updateOrderSummary(selectedIds);
+                checkoutModal.classList.remove('hidden');
+                checkoutModal.classList.add('flex');
+            });
+
+            closeCheckoutModal.addEventListener('click', () => {
+                checkoutModal.classList.add('hidden');
+                checkoutModal.classList.remove('flex');
+            });
+
+            cancelCheckout.addEventListener('click', () => {
+                checkoutModal.classList.add('hidden');
+                checkoutModal.classList.remove('flex');
+            });
+
+            checkoutModal.addEventListener('click', (e) => {
+                if (e.target === checkoutModal) {
+                    checkoutModal.classList.add('hidden');
+                    checkoutModal.classList.remove('flex');
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !checkoutModal.classList.contains('hidden')) {
+                    checkoutModal.classList.add('hidden');
+                    checkoutModal.classList.remove('flex');
+                }
+            });
+
+            // Update order summary in modal
+            function updateOrderSummary(selectedIds) {
+                const summaryItems = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(item => {
+                        const price = parseFloat(item.dataset.price);
+                        const quantity = parseInt(item.dataset.quantity);
+                        return `
+                            <div class="flex justify-between mb-2 text-sm">
+                                <span>${item.dataset.name} (x${quantity})</span>
+                                <span>₹${(price * quantity).toFixed(2)}</span>
+                            </div>
+                        `;
+                    }).join('');
+                
+                const total = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .reduce((sum, item) => sum + (parseFloat(item.dataset.price) * parseInt(item.dataset.quantity)), 0);
+                
+                document.getElementById('orderSummary').innerHTML = `
+                    ${summaryItems || '<p class="text-gray-600">No items selected</p>'}
+                    <hr class="my-2">
+                    <div class="flex justify-between font-semibold text-gray-900">
+                        <span>Total:</span>
+                        <span>₹${total.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

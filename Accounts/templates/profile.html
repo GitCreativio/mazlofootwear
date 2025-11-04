@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mazlo Footwear | Profile{% endblock title %}
+{% block metakeyword %}profile, account, footwear, e-commerce{% endblock metakeyword %}
+{% block metadescription %}Manage your Mazlo Footwear account, update personal details, and view your orders.{% endblock metadescription %}
+
+{% block content %}
+<body class="bg-gray-100">
+    <!-- Add/Edit Address Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="addressModal">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg mx-4 relative overflow-auto max-h-[90vh]">
+            <button class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl" id="closeAddressModal">×</button>
+            <h5 class="text-2xl font-bold text-gray-900 mb-6" id="addressModalTitle">Add New Address</h5>
+            <form method="post" action="{% url 'add_address' %}" id="addressForm">
+                {% csrf_token %}
+                <input type="hidden" name="address_id" id="addressId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                    <textarea class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" name="address" rows="3" required></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" name="city" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" name="state" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" name="zip_code" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" name="phone_number" required>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" class="bg-gray-300 text-gray-900 py-2 px-4 rounded-lg hover:bg-gray-400 transition-all" id="cancelAddress">Close</button>
+                    <button type="submit" class="bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-all">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Profile Navigation (Desktop) -->
+            <div class="lg:col-span-1" data-aos="fade-up">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-4">
+                        <h5 class="text-lg font-semibold text-gray-900 mb-4">Account</h5>
+                        <div class="space-y-2">
+                            <a href="{% url 'profile' %}" class="block px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-all">
+                                <i class="fas fa-user-circle mr-2"></i> Profile Details
+                            </a>
+                            <a href="{% url 'my_orders' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all">
+                                <i class="fas fa-box mr-2"></i> My Orders
+                            </a>
+                            <a href="#address-book" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Address Book
+                            </a>                           
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Navigation -->
+                <div class="lg:hidden bg-white rounded-2xl shadow-lg mt-4">
+                    <button class="w-full px-4 py-3 text-left text-gray-900 font-semibold flex justify-between items-center" onclick="toggleMobileNav()">
+                        <span>Account Menu</span>
+                        <i class="fas fa-chevron-down" id="mobileNavIcon"></i>
+                    </button>
+                    <div class="hidden p-4 space-y-2" id="mobileNav">
+                        <a href="{% url 'profile' %}" class="block px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-all">
+                            <i class="fas fa-user-circle mr-2"></i> Profile Details
+                        </a>
+                        <a href="{% url 'my_orders' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all">
+                            <i class="fas fa-box mr-2"></i> My Orders
+                        </a>
+                        <a href="#address-book" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all">
+                            <i class="fas fa-map-marker-alt mr-2"></i> Address Book
+                        </a>                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Profile Content -->
+            <div class="lg:col-span-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <!-- Profile Header -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Profile Settings</h2>
+                            <p class="text-gray-600">Manage your account information and settings</p>
+                        </div>
+                        <div class="mt-4 sm:mt-0 relative">
+                            <div class="w-24 h-24">
+                                <img src="{{ profile_picture_url|default:'/static/images/default_profile.jpg' }}" 
+                                     class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg" 
+                                     alt="Profile picture"
+                                     id="avatarPreview">
+                                <label for="profile_picture" class="absolute bottom-0 right-0 bg-gray-900 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-700 transition-all">
+                                    <i class="fas fa-camera"></i>
+                                    <input type="file" id="profile_picture" name="profile_picture" class="hidden" accept="image/*">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Form -->
+                    <form method="POST" enctype="multipart/form-data" id="profileForm">
+                        {% csrf_token %}
+                        <!-- Hidden Profile Picture Input for Form Submission -->
+                        <input type="file" name="profile_picture" id="hiddenProfilePicture" class="hidden" accept="image/*">
+                        <!-- Personal Information -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4"><i class="fas fa-user-circle mr-2"></i>Personal Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" 
+                                           id="first_name" name="first_name" value="{{ user_form.first_name.value|default:'' }}" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" 
+                                           id="last_name" name="last_name" value="{{ user_form.last_name.value|default:'' }}">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                    <input type="email" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" 
+                                           id="email" name="email" value="{{ user_form.email.value|default:'' }}" required>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                                    <textarea class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-900" 
+                                              id="bio" name="bio" rows="4" placeholder="Tell us about yourself...">{{ profile_form.bio.value|default:'' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-4">
+                            <button type="submit" class="bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-all">
+                                <i class="fas fa-save mr-2"></i> Save Changes
+                            </button>
+                            <a href="{% url 'logout' %}" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-all">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary Snippet -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mt-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-lg font-semibold text-gray-900"><i class="fas fa-box mr-2"></i>Recent Orders</h4>
+                        <a href="{% url 'my_orders' %}" class="text-gray-900 hover:text-gray-700 text-sm font-medium">View All</a>
+                    </div>
+                    {% if recent_orders %}
+                    <div class="space-y-4">
+                        {% for order in recent_orders|slice:":3" %}
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">Order #{{ order.id }}</p>
+                                <p class="text-xs text-gray-600">{{ order.order_date|date:"F j, Y" }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-900">₹{{ order.total_amount }}</p>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                    {% if order.order_status == 'Processing' %}bg-yellow-100 text-yellow-800
+                                    {% elif order.order_status == 'Shipped' %}bg-blue-100 text-blue-800
+                                    {% elif order.order_status == 'Delivered' %}bg-green-100 text-green-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ order.order_status }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-600">No recent orders found.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Address Book -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mt-6" id="address-book" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-lg font-semibold text-gray-900"><i class="fas fa-map-marker-alt mr-2"></i>Address Book</h4>
+                        <button class="bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-all" 
+                                onclick="openAddressModal('Add New Address', '')">
+                            <i class="fas fa-plus mr-2"></i> Add Address
+                        </button>
+                    </div>
+                    {% if addresses %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for address in addresses %}
+                        <div class="border border-gray-200 rounded-lg p-4 relative">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900">{{ address.address }}</p>
+                                    <p class="text-sm text-gray-600">{{ address.city }}, {{ address.state }} {{ address.zip_code }}</p>
+                                    <p class="text-sm text-gray-600">Phone: {{ address.phone_number }}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="text-gray-600 hover:text-gray-900" 
+                                            onclick="openAddressModal('Edit Address', '{{ address.id }}', '{{ address.address|escapejs }}', '{{ address.city|escapejs }}', '{{ address.state|escapejs }}', '{{ address.zip_code|escapejs }}', '{{ address.phone_number|escapejs }}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <a href="{% url 'delete_address' address.id %}" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-600">No addresses saved yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Profile Picture Preview and Form Submission
+        const profilePictureInput = document.getElementById('profile_picture');
+        const hiddenProfilePicture = document.getElementById('hiddenProfilePicture');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const profileForm = document.getElementById('profileForm');
+
+        profilePictureInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                hiddenProfilePicture.files = e.target.files; // Copy file to hidden input
+                avatarPreview.src = URL.createObjectURL(file);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File',
+                    text: 'Please upload a valid image file.',
+                });
+            }
+        });
+
+        profileForm.addEventListener('submit', function(e) {
+            // Ensure the hidden input has the file
+            if (profilePictureInput.files.length > 0) {
+                hiddenProfilePicture.files = profilePictureInput.files;
+            }
+        });
+
+        // Mobile Navigation Toggle
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            const icon = document.getElementById('mobileNavIcon');
+            mobileNav.classList.toggle('hidden');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        // Address Modal Handling
+        const addressModal = document.getElementById('addressModal');
+        const closeAddressModal = document.getElementById('closeAddressModal');
+        const cancelAddress = document.getElementById('cancelAddress');
+
+        function openAddressModal(title, id = '', address = '', city = '', state = '', zip_code = '', phone_number = '') {
+            document.getElementById('addressModalTitle').textContent = title;
+            document.getElementById('addressId').value = id;
+            document.getElementsByName('address')[0].value = address;
+            document.getElementsByName('city')[0].value = city;
+            document.getElementsByName('state')[0].value = state;
+            document.getElementsByName('zip_code')[0].value = zip_code;
+            document.getElementsByName('phone_number')[0].value = phone_number;
+            addressModal.classList.remove('hidden');
+            addressModal.classList.add('flex');
+        }
+
+        closeAddressModal.addEventListener('click', () => {
+            addressModal.classList.add('hidden');
+            addressModal.classList.remove('flex');
+        });
+
+        cancelAddress.addEventListener('click', () => {
+            addressModal.classList.add('hidden');
+            addressModal.classList.remove('flex');
+        });
+
+        addressModal.addEventListener('click', (e) => {
+            if (e.target === addressModal) {
+                addressModal.classList.add('hidden');
+                addressModal.classList.remove('flex');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !addressModal.classList.contains('hidden')) {
+                addressModal.classList.add('hidden');
+                addressModal.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block title %}Mazlo Footwear | Shopping{% endblock title %}
+{% block metakeyword %}footwear, shoes, shopping, e-commerce{% endblock metakeyword %}
+{% block metadescription %}Shop the latest collection of footwear at Mazlo Footwear. Find the perfect pair for every occasion.{% endblock metadescription %}
+
+{% block content %} 
+<body class="font-sans">
+    <main class="main-content bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <!-- Mobile Filter Button -->
+            <button class="lg:hidden bg-gray-900 text-white py-2 px-4 rounded-full mb-6 flex items-center gap-2" id="mobileFilterBtn">
+                <i class="fas fa-filter"></i> Filters
+            </button>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Filters Column -->
+                <div class="col-span-1 hidden lg:block filter-section bg-white rounded-2xl shadow-lg p-6" id="filterSection" data-aos="fade-right">
+                    <h5 class="text-xl font-bold text-gray-900 mb-6">Filter By</h5>
+                    <form id="filterForm">
+                        <!-- Category Filters -->
+                        <div class="mb-6">
+                            <h6 class="font-semibold text-gray-900 mb-3">Category</h6>
+                            {% for value, name in category_choices %}
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" name="category" id="cat-{{ value }}" value="{{ value }}"
+                                    class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                    {% if value in selected_categories %}checked{% endif %}>
+                                <label for="cat-{{ value }}" class="ml-2 text-gray-700 text-sm">{{ name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Type Filters -->
+                        <div class="mb-6">
+                            <h6 class="font-semibold text-gray-900 mb-3">Product Type</h6>
+                            {% for value, name in type_choices %}
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" name="type" id="type-{{ value }}" value="{{ value }}"
+                                    class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                    {% if value in selected_types %}checked{% endif %}>
+                                <label for="type-{{ value }}" class="ml-2 text-gray-700 text-sm">{{ name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Price Filter -->
+                        <div>
+                            <h6 class="font-semibold text-gray-900 mb-3">Price Range</h6>
+                            <div class="flex items-center mb-2">
+                                <input type="radio" name="price" id="price-0-50" value="0-50"
+                                    class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                    {% if selected_price == '0-50' %}checked{% endif %}>
+                                <label for="price-0-50" class="ml-2 text-gray-700 text-sm">Under $50</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input type="radio" name="price" id="price-50-100" value="50-100"
+                                    class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                    {% if selected_price == '50-100' %}checked{% endif %}>
+                                <label for="price-50-100" class="ml-2 text-gray-700 text-sm">$50 - $100</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input type="radio" name="price" id="price-100" value="100+"
+                                    class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                    {% if selected_price == '100+' %}checked{% endif %}>
+                                <label for="price-100" class="ml-2 text-gray-700 text-sm">Over $100</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Mobile Filter Modal -->
+                <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="filterModal">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md mx-4 relative">
+                        <button class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl" id="closeFilterModal">×</button>
+                        <h5 class="text-xl font-bold text-gray-900 mb-6">Filter By</h5>
+                        <form id="mobileFilterForm">
+                            <!-- Category Filters -->
+                            <div class="mb-6">
+                                <h6 class="font-semibold text-gray-900 mb-3">Category</h6>
+                                {% for value, name in category_choices %}
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" name="category" id="mobile-cat-{{ value }}" value="{{ value }}"
+                                        class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                        {% if value in selected_categories %}checked{% endif %}>
+                                    <label for="mobile-cat-{{ value }}" class="ml-2 text-gray-700 text-sm">{{ name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Type Filters -->
+                            <div class="mb-6">
+                                <h6 class="font-semibold text-gray-900 mb-3">Product Type</h6>
+                                {% for value, name in type_choices %}
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" name="type" id="mobile-type-{{ value }}" value="{{ value }}"
+                                        class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                        {% if value in selected_types %}checked{% endif %}>
+                                    <label for="mobile-type-{{ value }}" class="ml-2 text-gray-700 text-sm">{{ name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Price Filter -->
+                            <div>
+                                <h6 class="font-semibold text-gray-900 mb-3">Price Range</h6>
+                                <div class="flex items-center mb-2">
+                                    <input type="radio" name="price" id="mobile-price-0-50" value="0-50"
+                                        class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                        {% if selected_price == '0-50' %}checked{% endif %}>
+                                    <label for="mobile-price-0-50" class="ml-2 text-gray-700 text-sm">Under $50</label>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <input type="radio" name="price" id="mobile-price-50-100" value="50-100"
+                                        class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                        {% if selected_price == '50-100' %}checked{% endif %}>
+                                    <label for="mobile-price-50-100" class="ml-2 text-gray-700 text-sm">$50 - $100</label>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <input type="radio" name="price" id="mobile-price-100" value="100+"
+                                        class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
+                                        {% if selected_price == '100+' %}checked{% endif %}>
+                                    <label for="mobile-price-100" class="ml-2 text-gray-700 text-sm">Over $100</label>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="w-full bg-gray-900 text-white py-2 rounded-full mt-4 hover:bg-gray-700 transition duration-300" id="applyFilters">Apply Filters</button>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="col-span-1 lg:col-span-3">
+                    <!-- Sorting Header -->
+                    <div class="bg-white rounded-2xl shadow-lg p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4" data-aos="fade-up">
+                        <span class="text-gray-600 text-sm">{{ products|length }} products found</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-700 text-sm">Sort by:</span>
+                            <select id="sort" class="border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                                <option value="price-asc" {% if selected_sort == 'price-asc' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price-desc" {% if selected_sort == 'price-desc' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for product in products %}
+                        <a href="{% url 'productdetails' product.id %}" class="block" data-aos="fade-up" data-aos-delay="{% cycle '100' '200' '300' %}">
+                            <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                                {% with product.images.first as main_image %}
+                                    {% if main_image %}
+                                        <img src="{{ main_image.image.url }}" class="w-full h-64 object-cover" alt="{{ product.name }}">
+                                    {% else %}
+                                        <div class="h-64 bg-gray-200 flex items-center justify-center">
+                                            <i class="fas fa-image text-gray-400 text-3xl"></i>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                                <div class="p-4">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ product.name }}</h3>
+                                    <p class="text-red-500 font-semibold">₹{{ product.price }}</p>
+                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                    <button class="bg-white text-gray-900 py-2 px-4 rounded-full hover:bg-gray-200 transition duration-300 quick-view-btn">
+                                        <i class="fas fa-eye mr-2"></i>Quick View
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <div class="col-span-3 text-center py-16">
+                            <i class="fas fa-shoe-prints text-5xl text-gray-400 mb-4"></i>
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">No products found</h4>
+                            <p class="text-gray-600">Try adjusting your filters or search terms.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+    @media (max-width: 991.98px) {        
+        .navbar-logo {
+            height:8rem;
+            weight:8rem;
+        }        
+    }
+    </style>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Filter and sorting functionality
+        const filterForm = document.getElementById('filterForm');
+        const mobileFilterForm = document.getElementById('mobileFilterForm');
+        const sortSelect = document.getElementById('sort');
+        const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+        const filterModal = document.getElementById('filterModal');
+        const closeFilterModal = document.getElementById('closeFilterModal');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+
+        function updateFilters() {
+            const params = new URLSearchParams();
+            
+            // Add checked categories
+            document.querySelectorAll('#filterForm input[name="category"]:checked, #mobileFilterForm input[name="category"]:checked').forEach(checkbox => {
+                params.append('category', checkbox.value);
+            });
+            
+            // Add checked types
+            document.querySelectorAll('#filterForm input[name="type"]:checked, #mobileFilterForm input[name="type"]:checked').forEach(checkbox => {
+                params.append('type', checkbox.value);
+            });
+            
+            // Add price filter
+            const priceFilter = document.querySelector('#filterForm input[name="price"]:checked, #mobileFilterForm input[name="price"]:checked');
+            if (priceFilter) {
+                params.append('price', priceFilter.value);
+            }
+            
+            // Add sorting
+            params.append('sort', sortSelect.value);
+            
+            // Preserve pagination
+            const currentPage = new URLSearchParams(window.location.search).get('page');
+            if (currentPage) params.append('page', currentPage);
+
+            window.location.search = params.toString();
+        }
+
+        // Sync mobile and desktop filters
+        function syncFilters(sourceForm, targetForm) {
+            const sourceInputs = sourceForm.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            sourceInputs.forEach(sourceInput => {
+                const targetInput = targetForm.querySelector(`input[name="${sourceInput.name}"][value="${sourceInput.value}"]`);
+                if (targetInput) {
+                    targetInput.checked = sourceInput.checked;
+                }
+            });
+        }
+
+        // Event listeners
+        filterForm.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', () => {
+                syncFilters(filterForm, mobileFilterForm);
+                updateFilters();
+            });
+        });
+
+        mobileFilterForm.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', () => {
+                syncFilters(mobileFilterForm, filterForm);
+            });
+        });
+
+        sortSelect.addEventListener('change', updateFilters);
+
+        mobileFilterBtn.addEventListener('click', () => {
+            filterModal.classList.remove('hidden');
+            filterModal.classList.add('flex');
+        });
+
+        closeFilterModal.addEventListener('click', () => {
+            filterModal.classList.add('hidden');
+            filterModal.classList.remove('flex');
+        });
+
+        applyFiltersBtn.addEventListener('click', () => {
+            syncFilters(mobileFilterForm, filterForm);
+            updateFilters();
+            filterModal.classList.add('hidden');
+            filterModal.classList.remove('flex');
+        });
+
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) {
+                filterModal.classList.add('hidden');
+                filterModal.classList.remove('flex');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !filterModal.classList.contains('hidden')) {
+                filterModal.classList.add('hidden');
+                filterModal.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+{% endblock content %}

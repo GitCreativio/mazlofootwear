@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %} {% block navbar %}{% endblock navbar %} {% endcomment %}
+{% block title %}Mazlo Footwear | Premium Footwear Collection{% endblock title %}
+
+{% block content %}
+<!-- Modern Styling -->
+<style>
+    :root {
+        --primary: #2A2A2A;
+        --accent: #FF5A5F;
+        --light: #F8F9FA;
+    }
+
+    /* Modern Glassmorphism Navbar */
+    .nav-glass {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dynamic Hero Banner */  
+    .hero-banner {
+        height: 100vh;
+        background: 
+            linear-gradient(45deg, rgba(230, 226, 226, 0.3), rgba(0, 0, 0, 0.1)),
+            url('static/images/banner.jpg') center/cover no-repeat;
+        background-size: cover;        
+        margin: 10px;
+        border-radius: 25px 25px 0 0;
+        overflow: hidden; /* Ensures content respects the border-radius */
+        clip-path: ellipse(100% 100% at 50% 0%);
+    } 
+
+
+    .hero-content {
+        transform: translateY(30%);
+        opacity: 0;
+        animation: slideUp 1s forwards;
+    }
+
+    @keyframes slideUp {
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Category Grid */
+    .category-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .category-overlay {
+        position: absolute;
+        bottom: -50%;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.7);
+        padding: 1.5rem;
+        transition: bottom 0.3s ease;
+    }
+
+    .category-card:hover .category-overlay {
+        bottom: 0;
+    }
+
+    /* New Arrivals Scroll */
+    .new-arrivals {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .arrival-card {
+        scroll-snap-align: start;
+        min-width: 300px;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    /* Curved Offer Banner */
+    .offer-banner {
+        background: linear-gradient(135deg, var(--accent), #FF3B30);
+        clip-path: polygon(0 15%, 100% 0, 100% 85%, 0 100%);
+        padding: 5rem 0;
+    }
+
+    /* Product Hover Effect */
+    .product-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-overlay {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.9);
+        padding: 1rem;
+        transition: top 0.3s ease;
+        text-align: center;
+        border-radius:20px;
+    }
+
+    .product-card:hover .product-overlay {
+        top: 70%;
+    }
+
+    @media (max-width: 768px) {
+        .hero-banner {
+            clip-path: ellipse(120% 100% at 50% 0%);
+            height: 70vh;
+        }
+        
+        .offer-banner {
+            clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+        }
+    }
+
+    .hover-effect:hover .scale-transition {
+        transform: scale(1.03);
+    }
+    .scale-transition {
+        transition: transform 0.3s ease;
+    }
+    .gradient-text {
+        background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .btn-hover-gradient {
+        background: linear-gradient(45deg, #333, #000);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-hover-gradient:hover {
+        background: linear-gradient(45deg, #000, #333);
+        transform: translateY(-2px);
+    }
+    .bg-soft-primary {
+        background-color: rgba(13,110,253,0.1);
+    }
+    .bg-soft-dark {
+        background-color: rgba(33,37,41,0.1);
+    }
+    .blur-3 {
+        filter: blur(30px);
+    }
+    .blur-2 {
+        filter: blur(20px);
+    }
+</style>
+
+<!-- Dynamic Hero Banner -->
+{% if herobanner %}
+  {% with banner=herobanner.0 %}
+    <!-- Dynamic Hero Banner -->
+    <section class="hero-banner d-flex align-items-center text-light"
+             style="
+               height: 100vh;
+               background: 
+                 linear-gradient(45deg, rgba(230, 226, 226, 0.3), rgba(0, 0, 0, 0.1)),
+                 url('{{ banner.image.url }}') center/cover no-repeat;
+               background-size: cover;
+               margin: 10px;
+               border-radius: 25px 25px 0 0;
+               overflow: hidden;
+               clip-path: ellipse(100% 100% at 50% 0%);
+               position: relative;
+             ">
+      <div class="container text-start" style="position: relative; z-index: 2;">
+        {% if banner.title %}
+          <h1 class="display-4 fw-bold">{{ banner.title }}</h1>
+        {% endif %}
+        {% if banner.subtitle %}
+          <p class="lead">{{ banner.subtitle }}</p>
+        {% endif %}
+        {% if banner.button_text and banner.button_link %}
+          <a href="{{ banner.button_link }}" class="btn btn-light mt-3">
+            {{ banner.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </section>
+  {% endwith %}
+{% endif %}
+
+
+
+<!-- Category Grid -->
+<section class="py-5" id="collections">
+    <div class="container">
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-4">
+                <div class="category-card">
+                    <img src="{{ category.image.url }}" class="img-fluid" alt="{{ category.title }}">
+                    <div class="category-overlay text-light">
+                        <h3>{{ category.title }}</h3>
+                        <a href="{{ category.link }}" class="text-light text-decoration-none">
+                            Shop Now <i class="ms-2 fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>        
+    </div>
+</section>
+
+
+<!-- New Arrivals -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 fw-bold">New Arrivals</h2>
+        <div class="new-arrivals d-flex gap-4 pb-4 flex-wrap">
+            {% for banner in newarrivalbanner %}
+            <div class="arrival-card">
+                <div class="product-card">
+                    <img src="{{ banner.image.url }}" class="img-fluid" alt="{{ banner.title }}">
+                    {% comment %} <div class="product-overlay">
+                        <h5>{{ banner.title }}</h5>
+                        {% if banner.subtitle %}
+                        <p>{{ banner.subtitle }}</p>
+                        {% endif %}
+                        {% if banner.button_link %}
+                        <a href="{{ banner.button_link }}" class="btn btn-dark btn-sm">
+                            {{ banner.button_text }}
+                        </a>
+                        {% else %}
+                        <button class="btn btn-dark btn-sm">{{ banner.button_text }}</button>
+                        {% endif %}
+                    </div>  {% endcomment %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- Curved Offer Banner -->
+<section class="offer-banner text-light my-5">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-3">Seasonal Sale - Up to 40% Off</h2>
+        <p class="mb-4">Limited time offer on selected styles</p>
+        <a href="{% url "shopping" %}" class="btn btn-light btn-lg rounded-pill px-5">Shop Sale</a>
+    </div>
+</section>
+
+
+<!-- Featured Collection -->
+<section class="py-7 bg-light">
+    <div class="container">
+        <div class="row g-5 align-items-center justify-content-between">
+            <!-- Image Column -->
+            <div class="col-lg-6 col-xl-7">
+                <div class="position-relative overflow-hidden rounded-4 hover-effect">
+                    <img src="{% static "/images/Urban style.jpeg" %}"
+                         class="img-fluid rounded-4 scale-transition" 
+                         alt="Urban Fashion Collection"
+                         loading="lazy">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-10"></div>
+                </div>
+            </div>
+
+            <!-- Content Column -->
+            <div class="col-lg-6 col-xl-5">
+                <div class="ps-xl-4">
+                    <span class="badge bg-faded-dark text-dark mb-3">New Collection</span>
+                    <h2 class="display-5 fw-bold mb-4 gradient-text">Elevate Your Urban Style</h2>
+                    <p class="lead text-muted mb-4">Experience the perfect blend of metropolitan sophistication and contemporary comfort with our latest curated collection.</p>
+                    
+                    <div class="d-flex flex-wrap gap-3 mb-5">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check2-circle text-primary me-2"></i>
+                            <span>Premium Sustainable Materials</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check2-circle text-primary me-2"></i>
+                            <span>Smart-Tech Comfort Integration</span>
+                        </div>
+                    </div>
+
+                    <div class="d-sm-flex align-items-center gap-4">
+                        <a href="{% url "shopping" %}" class="btn btn-dark btn-hover-gradient px-6 py-3 mb-3 mb-sm-0">
+                            <span class="d-flex align-items-center">
+                                Explore Collection
+                                <i class="bi bi-arrow-right ms-2"></i>
+                            </span>
+                        </a>
+                        <a href="https://youtube.com/@mazlofootwear?si=z5-J6JIWVEYmjltc" class="btn btn-link text-decoration-none text-dark">
+                            Watch Preview <i class="bi bi-play-circle ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="position-absolute top-0 end-0 w-50 h-50 bg-soft-primary rounded-circle blur-3 opacity-20"></div>
+    <div class="position-absolute bottom-0 start-0 w-25 h-25 bg-soft-dark rounded-circle blur-2 opacity-10"></div>
+</section>
+
+
+<!-- Journal Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="fw-bold mb-5">Style Journal</h2>
+    <div class="row g-4">
+      {% for journal in journals %}
+        <div class="col-md-4">
+          <div class="card border-0 bg-white rounded-4 overflow-hidden h-100">
+            <img src="{{ journal.image.url }}" class="card-img-top" alt="{{ journal.title }}">
+            <div class="card-body">
+              <h5>{{ journal.title }}</h5>
+              <p>{{ journal.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No journal entries found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- Newsletter Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4">Join Our World</h2>
+        <p class="text-muted mb-4">Get exclusive access to new collections and special offers</p>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="email" class="form-control rounded-pill me-2" placeholder="Enter your email">
+                    <button class="btn btn-dark rounded-pill px-4">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Navbar Scroll Effect
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            document.querySelector('.navbar').classList.add('scrolled');
+        } else {
+            document.querySelector('.navbar').classList.remove('scrolled');
+        }
+    });
+
+    // Initialize Bootstrap components
+    var scroll = new bootstrap.ScrollSpy(document.body, {
+        target: '#navbarNav'
+    });
+</script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextPage = urlParams.get('next');
+
+    if (nextPage === 'profile' || nextPage === 'cart' || nextPage === 'add-to-cart') {
+        let routeTitle = '';
+        let loginRedirect = '';
+
+        if (nextPage === 'profile') {
+            routeTitle = "your profile";
+            loginRedirect = "{% url 'login' %}?next={% url 'profile' %}";
+        } else if (nextPage === 'cart') {
+            routeTitle = "your cart";
+            loginRedirect = "{% url 'login' %}?next={% url 'cart' %}";
+        } else if (nextPage === 'add-to-cart') {
+            routeTitle = "add items to your cart";
+            loginRedirect = "{% url 'login' %}?next={% url 'add_to_cart' %}";
+        }
+
+        Swal.fire({
+            title: 'Login Required',
+            text: `You need to log in to ${routeTitle}.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Login',
+            cancelButtonText: '← Back',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = loginRedirect;
+            } else {
+                // Optional: clear query param
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    }
+</script>
+{% endblock %}

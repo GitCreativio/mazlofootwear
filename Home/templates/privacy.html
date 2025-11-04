@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Mazlo Footwear | Policies & FAQs{% endblock title %}
+{% block metakeyword %}privacy policy, return policy, exchange policy, footwear FAQs, customer support{% endblock metakeyword %}
+{% block metadescription %}Mazlo Footwear policies - Read our privacy practices, return & exchange guidelines, and find answers to frequently asked questions about our premium footwear.{% endblock metadescription %}
+
+{% block content %}
+
+<body class="font-sans">
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-b from-gray-900 to-gray-800 text-white py-32">
+            <div class="container mx-auto px-4 text-center relative z-10" data-aos="fade-up">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Policies & FAQs</h1>
+                <p class="text-xl md:text-2xl max-w-2xl mx-auto">Transparent practices and answers to your questions for a confident shopping experience.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Links -->
+        <section class="container mx-auto px-4 -mt-16" data-aos="fade-up" data-aos-delay="100">
+            <nav class="bg-white rounded-2xl shadow-lg p-6 max-w-3xl mx-auto">
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#privacy" class="text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition duration-300">Privacy Policy</a>
+                    <a href="#returns" class="text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition duration-300">Returns & Exchanges</a>
+                    <a href="#faqs" class="text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition duration-300">FAQs</a>
+                </div>
+            </nav>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section id="privacy" class="container mx-auto px-4 py-16">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-shield-alt text-4xl text-gray-900 mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Privacy Policy</h2>
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Data Collection</h3>
+                        <p class="text-gray-600 mb-4">We collect information to enhance your shopping experience:</p>
+                        <ul class="list-disc pl-6 text-gray-600">
+                            <li>Order details and transaction history</li>
+                            <li>Shipping and billing addresses</li>
+                            <li>Device and usage information</li>
+                            <li>Customer service interactions</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Data Protection</h3>
+                        <p class="text-gray-600 mb-4">Your security is our priority:</p>
+                        <ul class="list-disc pl-6 text-gray-600">
+                            <li>SSL encrypted transactions</li>
+                            <li>Regular security audits</li>
+                            <li>Limited employee access</li>
+                            <li>PCI-DSS compliant payment processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Returns & Exchanges Section -->
+        <section id="returns" class="container mx-auto px-4 py-16 bg-gray-50">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-undo text-4xl text-gray-900 mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Returns & Exchanges</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Return Policy</h3>
+                        <ul class="list-disc pl-6 text-gray-600">
+                            <li>30-day return window</li>
+                            <li>Items must be unworn and in original packaging</li>
+                            <li>Free returns for defective items</li>
+                            <li>Refund processing within 5 business days</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Exchange Process</h3>
+                        <ul class="list-disc pl-6 text-gray-600">
+                            <li>Size exchanges available within 14 days</li>
+                            <li>Color/style exchanges subject to availability</li>
+                            <li>Pre-paid return shipping label included</li>
+                            <li>Instant store credit option available</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQs Section -->
+        <section id="faqs" class="container mx-auto px-4 py-16">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-question-circle text-4xl text-gray-900 mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+                <div class="space-y-4">
+                    <!-- FAQ 1 -->
+                    <div class="border border-gray-200 rounded-lg" data-aos="fade-up" data-aos-delay="300">
+                        <button class="w-full text-left px-6 py-4 text-lg font-semibold text-gray-900 hover:bg-gray-100 focus:outline-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('fa-chevron-down'); this.querySelector('i').classList.toggle('fa-chevron-up');">
+                            How is my payment information protected?
+                            <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                        <div class="hidden px-6 py-4 text-gray-600 bg-gray-50">
+                            We use bank-grade encryption and never store your full payment details. All transactions are processed through PCI-DSS compliant payment gateways.
+                        </div>
+                    </div>
+                    <!-- FAQ 2 -->
+                    <div class="border border-gray-200 rounded-lg" data-aos="fade-up" data-aos-delay="400">
+                        <button class="w-full text-left px-6 py-4 text-lg font-semibold text-gray-900 hover:bg-gray-100 focus:outline-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('fa-chevron-down'); this.querySelector('i').classList.toggle('fa-chevron-up');">
+                            What if I receive damaged footwear?
+                            <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                        <div class="hidden px-6 py-4 text-gray-600 bg-gray-50">
+                            Contact us within 48 hours of delivery with photos. We'll arrange free return shipping and expedite your replacement.
+                        </div>
+                    </div>
+                    <!-- FAQ 3 -->
+                    <div class="border border-gray-200 rounded-lg" data-aos="fade-up" data-aos-delay="500">
+                        <button class="w-full text-left px-6 py-4 text-lg font-semibold text-gray-900 hover:bg-gray-100 focus:outline-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('fa-chevron-down'); this.querySelector('i').classList.toggle('fa-chevron-up');">
+                            How long does shipping take?
+                            <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                        <div class="hidden px-6 py-4 text-gray-600 bg-gray-50">
+                            Standard shipping takes 3-5 business days. Express options are available at checkout with 1-2 day delivery.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}
