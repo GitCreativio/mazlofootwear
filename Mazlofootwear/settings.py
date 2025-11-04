@@ -26,12 +26,11 @@ SECRET_KEY = 'django-insecure-2o@rnjjgq48p4+zpd^3qxi8=uix@bb)!srpy^mid9r8ujzua8+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '127.0.0.1']
+ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '13.239.1.122', '127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
     'localhost',
-    '13.239.1.122'
     '0.0.0.0',         # sometimes needed
     '172.17.0.1',      # Docker host IP (example)
 ]
