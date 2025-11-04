@@ -171,10 +171,10 @@ JAZZMIN_SETTINGS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mazlo',
-        'USER': 'mazlo',
-        'PASSWORD':'9947',
-        'HOST': '127.0.0.1',  # If using a remote database, set the correct host
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD':'Mazlofootwear123',
+        'HOST': 'mazlofootwear.cdca6kiwypeq.ap-southeast-2.rds.amazonaws.com',  # If using a remote database, set the correct host
         'PORT': '5432',       # Default PostgreSQL port
     }
 }
