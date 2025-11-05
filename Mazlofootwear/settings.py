@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2o@rnjjgq48p4+zpd^3qxi8=uix@bb)!srpy^mid9r8ujzua8+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '13.239.1.122', '127.0.0.1']
+ALLOWED_HOSTS = ['www.mazlofootwear.com', 'mazlofootwear.com', '54.206.53.92', '127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
